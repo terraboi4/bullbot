@@ -1,8 +1,8 @@
 
 from dotenv import load_dotenv
 import os
-import requests
-from finviz.screener import Screener
+import yfinance as yf
+
 
 print('####### BULL BOT #######')
 load_dotenv()
@@ -11,5 +11,9 @@ TAAPI_KEY = os.getenv('TAAPI_KEY')
 stocks = ['AAPL', 'AMZN', 'NFLX', 'AMD', 'NVDA', 'META',
           'AIP', 'ADMA', 'TSLA', 'DIS', 'GOOG', 'MSFT', 'COST', 'V']
 print('Stocks: ', stocks)
-finviz_stocks = Screener(filters=None, signal='Channel up')
-print(finviz_stocks[1:10])
+
+
+def calculate_macd(data):
+    data['EMA12'] = data['Close'].ewm(span=12, adjust=False).mean()
+    data['EMA26'] = data['Close'].ewm(span=26, adjust=False).mean()
+    data['MACD'] = data['EMA12'] - data['EMA26']
